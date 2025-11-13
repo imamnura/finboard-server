@@ -7,8 +7,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node --esm src/index.ts",
-    "dev": "nodemon --exec \"ts-node --esm\" src/index.ts",
-    "migrate": "npx prisma migrate dev --name init_models",
+    "dev": "pnpm run generate:prisma && nodemon --exec \"ts-node --esm\" src/index.ts",
+    "migrate": "npx prisma migrate dev",
+    "generate:prisma": "npx prisma generate",
     "studio": "npx prisma studio"
   },
   "keywords": [],
@@ -17,11 +18,17 @@
   "packageManager": "pnpm@10.9.0",
   "dependencies": {
     "@prisma/client": "^6.19.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.1",
     "nodemon": "^3.1.11",
     "prisma": "^6.19.0",

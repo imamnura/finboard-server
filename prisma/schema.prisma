@@ -1,15 +1,59 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Ini adalah file skema Prisma untuk mendefinisikan model data.
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// 1. Model Pengguna (Admin/User)
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Akan menyimpan password yang sudah di-hash
+  name      String?  // Nama pengguna
+  role      Role     @default(USER) // Peran untuk otorisasi (Admin, USER)
+
+  // Relasi
+  articles Article[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Enum untuk Peran Pengguna (Digunakan untuk otorisasi di Middleware)
+enum Role {
+  SUPER_ADMIN // Untuk CRUD Role/Privilege
+  ADMIN       // Untuk CRUD Article/Product
+  USER        // Pengguna biasa
+}
+
+// 2. Model Artikel (Content Management)
+model Article {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  isPublished Boolean @default(false)
+
+  // Relasi ke User
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 3. Model Produk (Layanan/Produk Keuangan yang Ditawarkan)
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Float    // Menggunakan Float untuk simulasi harga/biaya
+  isActive    Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
